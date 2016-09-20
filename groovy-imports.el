@@ -96,8 +96,8 @@ start (if there are none)."
   (goto-char (point-min))
   ;; package declaration is always in the beginning of a file, so no need to
   ;; reset the point after the first search
-  (let ((package-decl-point (re-search-forward "package .*;" nil t))
-        (import-decl-point (re-search-forward "import .*;" nil t)))
+  (let ((package-decl-point (re-search-forward "package .*;?" nil t))
+        (import-decl-point (re-search-forward "import .*;?" nil t)))
     ;; 1. If there are imports in the file - go to the first one
     ;;
     ;; 2. No imports, and the package declaration is available - go to the end
@@ -117,7 +117,7 @@ start (if there are none)."
 (defun groovy-imports-get-import (line)
   "Return the fully-qualified package for the given import line."
   (when line
-    (cadr (s-match "import \\\(.*\\\);"
+    (cadr (s-match "import \\\([^;]*\\\)"
                    (string-trim line)))))
 
 (defun groovy-imports-get-package-and-class (import)
@@ -135,7 +135,7 @@ Example 'java.util.Map' returns '(\"java.util\" \"Map\")."
   "Checks if the import already exists"
   (save-excursion
     (goto-char (point-min))
-    (re-search-forward (concat "^[ \t]*import[ \t]+" full-name "[ \t]*;") nil t)))
+    (re-search-forward (concat "^[ \t]*import[ \t]+" full-name "[ \t]*;?") nil t)))
 
 (defun groovy-imports-find-place-sorted-block (full-name class-name package)
   "Finds the insertion place within a sorted import block.
@@ -157,7 +157,7 @@ imports by a single line, and both blocks are always present."
 
 (defun groovy-imports-find-place-after-last-import (full-name class-name package)
   "Finds the insertion place by moving past the last import declaration in the file."
-  (while (re-search-forward "import[ \t]+.+[ \t]*;" nil t))
+  (while (re-search-forward "import[ \t]+.+[ \t]*;?" nil t))
   (beginning-of-line)
   (unless (equal (point-at-bol) (point-at-eol))
     (forward-line)
@@ -201,7 +201,7 @@ Groovy-mode buffer"
   (interactive)
   (cl-mapcar
    #'groovy-imports-get-import
-   (cl-remove-if-not (lambda (str) (s-matches? "import[ \t]+.+[ \t]*;" str))
+   (cl-remove-if-not (lambda (str) (s-matches? "import[ \t]+[^;]+[ \t]*" str))
                      (s-lines (buffer-string)))))
 
 ;;;###autoload
@@ -224,7 +224,7 @@ Groovy-mode buffer"
 
       ;; The insertion itself. Note that the only thing left to do here is to
       ;; insert the import.
-      (insert "import " (concat package "." class-name) ";")
+      (insert "import " (concat package "." class-name))
       full-name)))
 
 ;;;###autoload

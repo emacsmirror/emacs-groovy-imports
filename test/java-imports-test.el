@@ -10,11 +10,16 @@
 
 (ert-deftest t-import-for-line ()
   (with-temp-buffer
+    (insert "import java.util.List")
+    (should (equal (groovy-imports-import-for-line)
+                   "java.util.List")))
+  ;; semicolons are optional in groovy but can be there
+  (with-temp-buffer
     (insert "import java.util.List;")
     (should (equal (groovy-imports-import-for-line)
                    "java.util.List")))
   (with-temp-buffer
-    (insert "     import org.writequit.Thingy;  ")
+    (insert "     import org.writequit.Thingy  ")
     (should (equal (groovy-imports-import-for-line)
                    "org.writequit.Thingy"))))
 
@@ -22,10 +27,10 @@
 (ert-deftest t-go-to-imports-start ()
   ;; both package and imports present? Goto to the first import line beginning
   (with-temp-buffer
-    (insert "package mypackage;\n")
+    (insert "package mypackage\n")
     (insert "\n")
-    (insert "import java.util.List;\n")
-    (insert "import java.util.ArrayList;\n")
+    (insert "import java.util.List\n")
+    (insert "import java.util.ArrayList\n")
     (insert "\n\n")
     (groovy-imports-go-to-imports-start)
     (should (equal (line-number-at-pos) 3)))
@@ -35,8 +40,8 @@
     (insert "\n")
     (insert "\n")
     (insert "\n")
-    (insert "import java.util.List;\n")
-    (insert "import java.util.ArrayList;\n")
+    (insert "import java.util.List\n")
+    (insert "import java.util.ArrayList\n")
     (insert "\n\n")
     (groovy-imports-go-to-imports-start)
     (should (equal (line-number-at-pos) 4)))
@@ -45,7 +50,7 @@
   ;; lines
   (with-temp-buffer
     (insert "\n")
-    (insert "package mypackage;\n")
+    (insert "package mypackage\n")
     (insert "\n")
     (insert "\n")
     (insert "class A {}\n")
@@ -67,52 +72,52 @@
   (with-temp-buffer
     (setq-local groovy-imports-find-block-function
                 #'groovy-imports-find-place-after-last-import)
-    (insert "package mypackage;\n\n")
-    (insert "import java.util.List;\n\n\n")
+    (insert "package mypackage\n\n")
+    (insert "import java.util.List\n\n\n")
     (groovy-imports-add-import-with-package "ArrayList" "java.util")
     (should
      (equal
       (buffer-string)
       (concat
-       "package mypackage;\n\n"
-       "import java.util.List;\n"
-       "import java.util.ArrayList;\n\n\n"))))
+       "package mypackage\n\n"
+       "import java.util.List\n"
+       "import java.util.ArrayList\n\n\n"))))
 
   ;; Test for annotation importing
   (with-temp-buffer
-    (insert "package mypackage;\n\n")
-    (insert "import java.util.List;\n\n\n")
+    (insert "package mypackage\n\n")
+    (insert "import java.util.List\n\n\n")
     (groovy-imports-add-import-with-package "@MyAnnotation" "org.foo")
     (should
      (equal
       (buffer-string)
       (concat
-       "package mypackage;\n\n"
-       "import java.util.List;\n"
-       "import org.foo.MyAnnotation;\n\n\n"))))
+       "package mypackage\n\n"
+       "import java.util.List\n"
+       "import org.foo.MyAnnotation\n\n\n"))))
 
   (with-temp-buffer
     (setq-local groovy-imports-find-block-function
                 #'groovy-imports-find-place-sorted-block)
-    (insert "package mypackage;\n\n")
-    (insert "import java.util.List;\n\n\n")
+    (insert "package mypackage\n\n")
+    (insert "import java.util.List\n\n\n")
     (groovy-imports-add-import-with-package "ArrayList" "java.util")
     (should
      (equal
       (buffer-string)
       (concat
-       "package mypackage;\n\n"
-       "import java.util.ArrayList;\n"
-       "import java.util.List;\n\n\n")))))
+       "package mypackage\n\n"
+       "import java.util.ArrayList\n"
+       "import java.util.List\n\n\n")))))
 
 (ert-deftest t-list-imports ()
   (with-temp-buffer
-    (insert "package mypackage;\n")
+    (insert "package mypackage\n")
     (insert "\n")
-    (insert "import org.Thing;\n")
+    (insert "import org.Thing\n")
     (insert "\n")
-    (insert "import java.util.List;\n")
-    (insert "import java.util.ArrayList;\n")
+    (insert "import java.util.List\n")
+    (insert "import java.util.ArrayList\n")
     (insert "\n")
     (insert "public class Foo {}")
     (should
