@@ -69,20 +69,7 @@
   :type 'string)
 
 (defcustom groovy-imports-default-packages
-  '(("List" . "java.util")
-    ("Collection" . "java.util")
-    ("Set" . "java.util")
-    ("Queue" . "java.util")
-    ("Deque" . "java.util")
-    ("HashSet" . "java.util")
-    ("TreeSet" . "java.util")
-    ("ArrayList" . "java.util")
-    ("LinkedList" . "java.util")
-    ("ArrayDeque" . "java.util")
-    ("PriorityQueue" . "java.util")
-    ("HashMap" . "java.util")
-    ("TreeMap" . "java.util")
-    ("Iterator" . "java.util"))
+  '(("Sql" . "groovy.sql"))
   "An alist mapping class names to probable packages of the classes."
   :group 'groovy-imports
   :type '(alist :key-type string :value-type string))
@@ -119,7 +106,7 @@
 (defun groovy-imports-get-package-and-class (import)
   "Explode the import and return (pkg . class) for the given IMPORT.
 
-Example 'java.util.Map' returns '(\"java.util\" \"Map\")."
+Example 'groovy.sql.Sql' returns '(\"groovy.sql\" \"Sql\")."
   (when import
     (cl-subseq (s-match "\\\(.*\\\)\\\.\\\([A-Z].+\\\);?" import) 1)))
 
