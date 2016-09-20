@@ -54,19 +54,17 @@
   :type 'boolean)
 
 (defcustom groovy-imports-use-cache t
-  "Whether packages for classes should be cached"
+  "Whether packages for classes should be cached."
   :group 'groovy-imports
   :type 'boolean)
 
 (defcustom groovy-imports-find-block-function 'groovy-imports-find-place-after-last-import
-  "A function that should find a proper insertion place within
-  the block of import declarations."
+  "A function that should find a proper insertion place within the block of import declarations."
   :group 'groovy-imports
   :type 'function)
 
 (defcustom groovy-imports-cache-name "groovy-imports"
-  "Name of the cache to be used for the ClassName to Package
-  mapping cache."
+  "Name of the cache to be used for the ClassName to Package mapping cache."
   :group 'groovy-imports
   :type 'string)
 
@@ -85,14 +83,12 @@
     ("HashMap" . "java.util")
     ("TreeMap" . "java.util")
     ("Iterator" . "java.util"))
-  "An alist mapping class names to probable packages of the
-classes."
+  "An alist mapping class names to probable packages of the classes."
   :group 'groovy-imports
   :type '(alist :key-type string :value-type string))
 
 (defun groovy-imports-go-to-imports-start ()
-  "Go to the point where groovy import statements start or should
-start (if there are none)."
+  "Go to the point where groovy import statements start or should start (if there are none)."
   (goto-char (point-min))
   ;; package declaration is always in the beginning of a file, so no need to
   ;; reset the point after the first search
@@ -115,30 +111,30 @@ start (if there are none)."
              (open-line 1)))))
 
 (defun groovy-imports-get-import (line)
-  "Return the fully-qualified package for the given import line."
+  "Return the fully-qualified package for the given import LINE."
   (when line
     (cadr (s-match "import \\\([^;]*\\\)"
                    (string-trim line)))))
 
 (defun groovy-imports-get-package-and-class (import)
-  "Explode the import and return (pkg . class) for the given import.
+  "Explode the import and return (pkg . class) for the given IMPORT.
 
 Example 'java.util.Map' returns '(\"java.util\" \"Map\")."
   (when import
     (cl-subseq (s-match "\\\(.*\\\)\\\.\\\([A-Z].+\\\);?" import) 1)))
 
 (defun groovy-imports-import-for-line ()
-  "Returns the fully-qualified class name for the import line."
+  "Return the fully-qualified class name for the import line."
   (groovy-imports-get-import (thing-at-point 'line)))
 
 (defun groovy-imports-import-exists-p (full-name)
-  "Checks if the import already exists"
+  "Check if the import FULL-NAME already exists."
   (save-excursion
     (goto-char (point-min))
     (re-search-forward (concat "^[ \t]*import[ \t]+" full-name "[ \t]*;?") nil t)))
 
 (defun groovy-imports-find-place-sorted-block (full-name class-name package)
-  "Finds the insertion place within a sorted import block.
+  "Find the insertion place within a sorted import block.
 
 Follows a convention where non-JRE imports are separated from JRE
 imports by a single line, and both blocks are always present."
@@ -156,7 +152,7 @@ imports by a single line, and both blocks are always present."
   (open-line 1))
 
 (defun groovy-imports-find-place-after-last-import (full-name class-name package)
-  "Finds the insertion place by moving past the last import declaration in the file."
+  "Find the insertion place by moving past the last import declaration in the file."
   (while (re-search-forward "import[ \t]+.+[ \t]*;?" nil t))
   (beginning-of-line)
   (unless (equal (point-at-bol) (point-at-eol))
@@ -164,7 +160,7 @@ imports by a single line, and both blocks are always present."
     (open-line 1)))
 
 (defun groovy-imports-read-package (class-name cached-package)
-  "Reads a package name for a class, offers default values for
+  "Read a package name for a class, offers default values for
 known classes"
   (or (car (s-match ".*\\\..*" class-name))
       (and (not current-prefix-arg)
@@ -177,7 +173,7 @@ known classes"
 
 ;;;###autoload
 (defun groovy-imports-scan-file ()
-  "Scans a groovy-mode buffer, adding any import class -> package
+  "Scan a groovy-mode buffer, adding any import class -> package
 mappings to the import cache. If called with a prefix arguments
 overwrites any existing cache entries for the file."
   (interactive)
@@ -196,8 +192,7 @@ overwrites any existing cache entries for the file."
 
 ;;;###autoload
 (defun groovy-imports-list-imports ()
-  "Return a list of all fully-qualified packages in the current
-Groovy-mode buffer"
+  "Return a list of all fully-qualified packages in the current Groovy-mode buffer."
   (interactive)
   (cl-mapcar
    #'groovy-imports-get-import
