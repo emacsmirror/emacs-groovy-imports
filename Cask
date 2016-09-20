@@ -1,7 +1,7 @@
 (source gnu)
 (source melpa)
 
-(package-file "java-imports.el")
+(package-file "groovy-imports.el")
 
 (depends-on "s")
 (depends-on "pcache")

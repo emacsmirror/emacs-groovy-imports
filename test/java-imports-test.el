@@ -1,21 +1,21 @@
-;;; java-imports-test.el --- tests for java imports
+;;; groovy-imports-test.el --- tests for groovy imports
 
-;; Copyright (C) 2015  Matthew Lee Hinman
+;; Copyright (C) 2016 Miro Bezjak (original code by Matthew Lee Hinman)
 
 ;;; Code:
 
 (require 'ert)
-(load-file "java-imports.el")
+(load-file "groovy-imports.el")
 
 
 (ert-deftest t-import-for-line ()
   (with-temp-buffer
     (insert "import java.util.List;")
-    (should (equal (java-imports-import-for-line)
+    (should (equal (groovy-imports-import-for-line)
                    "java.util.List")))
   (with-temp-buffer
     (insert "     import org.writequit.Thingy;  ")
-    (should (equal (java-imports-import-for-line)
+    (should (equal (groovy-imports-import-for-line)
                    "org.writequit.Thingy"))))
 
 
@@ -27,7 +27,7 @@
     (insert "import java.util.List;\n")
     (insert "import java.util.ArrayList;\n")
     (insert "\n\n")
-    (java-imports-go-to-imports-start)
+    (groovy-imports-go-to-imports-start)
     (should (equal (line-number-at-pos) 3)))
 
   ;; no package and imports present? First import line
@@ -38,7 +38,7 @@
     (insert "import java.util.List;\n")
     (insert "import java.util.ArrayList;\n")
     (insert "\n\n")
-    (java-imports-go-to-imports-start)
+    (groovy-imports-go-to-imports-start)
     (should (equal (line-number-at-pos) 4)))
 
   ;; package present, no imports? Add a correct import place, keeping the empty
@@ -49,7 +49,7 @@
     (insert "\n")
     (insert "\n")
     (insert "class A {}\n")
-    (java-imports-go-to-imports-start)
+    (groovy-imports-go-to-imports-start)
     (should (equal (line-number-at-pos) 4))
     (should (equal (count-lines (point-min) (point-max)) 7)))
 
@@ -59,17 +59,17 @@
     (insert "\n")
     (insert "\n")
     (insert "class A {}\n")
-    (java-imports-go-to-imports-start)
+    (groovy-imports-go-to-imports-start)
     (should (equal (line-number-at-pos) 1))
     (should (equal (count-lines (point-min) (point-max)) 5))))
 
 (ert-deftest t-add-imports ()
   (with-temp-buffer
-    (setq-local java-imports-find-block-function
-                #'java-imports-find-place-after-last-import)
+    (setq-local groovy-imports-find-block-function
+                #'groovy-imports-find-place-after-last-import)
     (insert "package mypackage;\n\n")
     (insert "import java.util.List;\n\n\n")
-    (java-imports-add-import-with-package "ArrayList" "java.util")
+    (groovy-imports-add-import-with-package "ArrayList" "java.util")
     (should
      (equal
       (buffer-string)
@@ -82,7 +82,7 @@
   (with-temp-buffer
     (insert "package mypackage;\n\n")
     (insert "import java.util.List;\n\n\n")
-    (java-imports-add-import-with-package "@MyAnnotation" "org.foo")
+    (groovy-imports-add-import-with-package "@MyAnnotation" "org.foo")
     (should
      (equal
       (buffer-string)
@@ -92,11 +92,11 @@
        "import org.foo.MyAnnotation;\n\n\n"))))
 
   (with-temp-buffer
-    (setq-local java-imports-find-block-function
-                #'java-imports-find-place-sorted-block)
+    (setq-local groovy-imports-find-block-function
+                #'groovy-imports-find-place-sorted-block)
     (insert "package mypackage;\n\n")
     (insert "import java.util.List;\n\n\n")
-    (java-imports-add-import-with-package "ArrayList" "java.util")
+    (groovy-imports-add-import-with-package "ArrayList" "java.util")
     (should
      (equal
       (buffer-string)
@@ -117,16 +117,16 @@
     (insert "public class Foo {}")
     (should
      (equal
-      (java-imports-list-imports)
+      (groovy-imports-list-imports)
       '("org.Thing" "java.util.List" "java.util.ArrayList")))))
 
 (ert-deftest t-pkg-and-class-from-import ()
   (should
-   (equal (java-imports-get-package-and-class "java.util.Map")
+   (equal (groovy-imports-get-package-and-class "java.util.Map")
           '("java.util" "Map")))
   (should
-   (equal (java-imports-get-package-and-class "org.foo.bar.baz.ThingOne")
+   (equal (groovy-imports-get-package-and-class "org.foo.bar.baz.ThingOne")
           '("org.foo.bar.baz" "ThingOne"))))
 
 ;; End:
-;;; java-imports-test.el ends here
+;;; groovy-imports-test.el ends here
