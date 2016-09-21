@@ -19,18 +19,10 @@ programming language. Code is mostly the same (all credits go to original author
 of emacs-java-imports), except that it deals with the fact that semicolons are
 optional in groovy.
 
-I needed a way to import groovy classes easily in Emacs. I also didn't want a
-package that was tied to a particular tool like maven or gradle (especially a
-potentially long startup time tool).
-
-This adds the =import-groovy-class= function, which will prompt for the class at
-point, then the package, then add the required import statement for the class
-and cache a "class-name -> package" relationship for any future importing of the
-class.
-
-It does this because I didn't want to drop into Intellij to add all the import
-statements for my Groovy code, I just want to hit a key and have an import
-statement added for the class under the point.
+This package adds the =import-groovy-class= function, which will prompt for the
+class at point, then the package, then add the required import statement for the
+class and cache a "class-name -> package" relationship for any future importing
+of the class.
 
 * Installation
 
