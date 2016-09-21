@@ -3,9 +3,6 @@
 
 (package-file "groovy-imports.el")
 
-(depends-on "s")
-(depends-on "pcache")
-
 (development
  (depends-on "cask-package-toolset")
  (depends-on "f")
