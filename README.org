@@ -11,8 +11,8 @@
 
 * Introduction
 
-[[https://travis-ci.org/dakrone/emacs-java-imports][file:https://travis-ci.org/mbezjak/emacs-groovy-imports.svg]]
-[[http://melpa.org/#/java-imports][file:http://melpa.org/packages/groovy-imports-badge.svg]]
+[[https://travis-ci.org/mbezjak/emacs-groovy-imports][file:https://travis-ci.org/mbezjak/emacs-groovy-imports.svg]]
+[[http://melpa.org/#/groovy-imports][file:http://melpa.org/packages/groovy-imports-badge.svg]]
 
 This is a fork of [[https://github.com/dakrone/emacs-java-imports][emacs-java-imports]] that is modified to work with [[http://groovy-lang.org/][Groovy]]
 programming language. Code is mostly the same (all credits go to original author
