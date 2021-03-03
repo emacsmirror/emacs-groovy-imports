@@ -107,8 +107,9 @@
   "Explode the import and return (pkg . class) for the given IMPORT.
 
 Example 'groovy.sql.Sql' returns '(\"groovy.sql\" \"Sql\")."
-  (when import
-    (cl-subseq (s-match "\\\(.*\\\)\\\.\\\([A-Z].+\\\);?" import) 1)))
+  (when-let* (import
+              (package-and-class (s-match "\\\(.*\\\)\\\.\\\([A-Z].+\\\);?" import)))
+    (cl-subseq package-and-class 1)))
 
 (defun groovy-imports-import-for-line ()
   "Return the fully-qualified class name for the import line."
