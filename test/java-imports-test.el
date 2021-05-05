@@ -131,7 +131,9 @@
           '("java.util" "Map")))
   (should
    (equal (groovy-imports-get-package-and-class "org.foo.bar.baz.ThingOne")
-          '("org.foo.bar.baz" "ThingOne"))))
+          '("org.foo.bar.baz" "ThingOne")))
+  (should
+   (equal (groovy-imports-get-package-and-class "somePackage.*") nil)))
 
 ;; End:
 ;;; groovy-imports-test.el ends here
