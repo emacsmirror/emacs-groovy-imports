@@ -123,3 +123,11 @@ By default groovy-imports will use "=groovy-imports=" as the name of the cache o
 class->package names, however, if you want to have separate caches per project,
 you can customize =groovy-imports-cache-name= to have a separate String name
 (perhaps in a =.dir-locals.el= for per-project imports).
+
+* How to run the tests?
+
+You'll need: https://github.com/cask/cask
+
+Run in the terminal:
+1. =make install=
+2. =make test=
